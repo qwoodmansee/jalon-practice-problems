@@ -4,7 +4,7 @@ This is problem statement two. You can write the solution in any language you'd 
 
 ## Goal
 
-Create an application which can be run via the command line. Name your solution `my-solution.js`.
+Create an application which can be run via the command line. Name your solution `my-solution.[whatever-is-appropriate]`.
 
 The goal of the application is to build up a 3 person party of adventurers to go on a quest. Each party _must_ contain one healer, one tank, and one dps. Each party member should have a name, health (a number), and one of three properties: shield amount (a number) for the tank, damage amount (a number) for the dps, and heal amount (a number) for the healer.
 
