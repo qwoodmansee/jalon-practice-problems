@@ -1,102 +1,50 @@
 const inquirer = require('inquirer');
-const partyArray = []
 
-function menu() {
-    inquirer.prompt([
-        {
-            name: 'init',
-            type: 'list',
-            message: 'What party member would you like to add?',
-            choices: ['Tank', 'Healer', 'DPS', 'Finish']
-        },
-    ])
-        .then((answers) => {
-            if (answers.init === 'Tank') {
-                addTank();
-            } else if (answers.init === 'Healer') {
-                addHealer();
-            } else if (answers.init === 'DPS') {
-                addDamage();
-            } else {
-                finish();
-            }
-        })
-};
+async function menu2() {
+    const partyArray = [];
+    let keepGoing = true;
+    while (keepGoing == true) {
+        const answers = await inquirer.prompt([
+            {
+                name: 'role',
+                type: 'list',
+                message: 'What party member would you like to add?',
+                choices: ['Tank', 'Healer', 'DPS', 'Finish']
+            },
+            {
+                name: 'name',
+                type: 'input',
+                message: 'What is the party members name?',
+                when: (answers) => answers.role !== 'Finish'
+            },
+        ])
+        if (answers.role !== "Finish"){
+            const newMember = await createMember(answers.name, answers.role)
+            partyArray.push(newMember);
+        } else {
+            console.log(partyArray);
+            keepGoing = false;
+        }
+    }
+}
 
-function addTank() {
-    inquirer.prompt([
-        {
-            name: 'name',
-            type: 'input',
-            message: 'What is the party members name?'
-        },
-        {
-            name: 'shield',
-            type: 'input',
-            message: 'Enter this characters shield amount? (Please enter a number)'
-        },
-    ])
-        .then((answers) => {
-            partyArray.push(`${answers.name} is a tank with ${answers.shield} shield!`)
-        }).then(function (err) {
-            if (err) {
-                console.log(err)
-            }
-            console.log('Tank added to your party!')
-            menu();
-        })
-};
+async function createMember(name, role) {
+    let valueType = '';
+    if (role === 'Tank') {
+       valueType = 'shield'; 
+    } else if (role === 'Healer') {
+        valueType = 'healing';
+    } else {
+        valueType = 'damage';
+    }
+        const { value } = await inquirer.prompt([
+            {
+                name: 'value',
+                type: 'input',
+                message: `Enter this characters ${valueType} amount? (Please enter a number)`
+            },
+        ])
+    return (`${name} is a ${role} with ${value} ${valueType}!`);
+}
 
-function addHealer() {
-    inquirer.prompt([
-        {
-            name: 'name',
-            type: 'input',
-            message: 'What is the party members name?'
-        },
-        {
-            name: 'healing',
-            type: 'input',
-            message: 'Enter this characters healing amount? (Please enter a number)'
-        },
-    ])
-        .then((answers) => {
-            partyArray.push(`${answers.name} is a healer with ${answers.healing} healing!`)
-        }).then(function (err) {
-            if (err) {
-                console.log(err)
-            }
-            console.log('Healer added to your party!')
-            menu();
-        })
-};
-
-function addDamage() {
-    inquirer.prompt([
-        {
-            name: 'name',
-            type: 'input',
-            message: 'What is the party members name?'
-        },
-        {
-            name: 'damage',
-            type: 'input',
-            message: 'Enter this characters damage amount? (Please enter a number)'
-        },
-    ])
-        .then((answers) => {
-            partyArray.push(`${answers.name} is a DPS with ${answers.damage} damage!`)
-        }).then(function (err) {
-            if (err) {
-                console.log(err);
-            }
-            console.log('DPS added to your party!')
-            menu();
-        })
-};
-
-function finish() {
-    console.log(partyArray)
-};
-
-menu();
+menu2();
